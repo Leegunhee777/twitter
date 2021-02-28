@@ -13,11 +13,13 @@ function App() {
   
   const [init ,setInit] = useState(false); //전체적인 초깃값의 초기화 즉, 필요한 데이터가 다 들어오지않으면 전체를 그냥 렌더하지 않는다의 용도로 쓰이는것임
   const[isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userObj, setUserObj] = useState(null);
   useEffect(()=>{
     //파이어스토어의 내장되어있는 이벤트 리스너!!같은거임 onAuthStateChanged , user의 로그인상태의 변화가 생기면 감지해낸다.
     authService.onAuthStateChanged((user)=>{  //user가 값이 없으면 Auth를 보여주고 값이 있으면 Home을 보여준다. !!!!!
       if(user){
         setIsLoggedIn(true);
+        setUserObj(user); //onAuthStateChanged함수를 이용해, 로그인된 유저의 고유 id 정보를 받아옴
       }else{
         setIsLoggedIn(false);
       }
@@ -26,7 +28,7 @@ function App() {
   },[]);
   return (
     <>
-    {init ? <AppRouter isLoggedIn={isLoggedIn}/> : "Initializing..."} 
+    {init ? <AppRouter isLoggedIn={isLoggedIn} userObj={userObj}/> : "Initializing..."} 
     <footer>&copy; twitter {new Date().getFullYear()}</footer>
     </>
   );
