@@ -12,23 +12,23 @@ function App() {
                                                                         //아래와 같은 해결방안이 제시됨
   
   const [init ,setInit] = useState(false); //전체적인 초깃값의 초기화 즉, 필요한 데이터가 다 들어오지않으면 전체를 그냥 렌더하지 않는다의 용도로 쓰이는것임
-  const[isLoggedIn, setIsLoggedIn] = useState(false);
+
   const [userObj, setUserObj] = useState(null);
   useEffect(()=>{
     //파이어스토어의 내장되어있는 이벤트 리스너!!같은거임 onAuthStateChanged , user의 로그인상태의 변화가 생기면 감지해낸다.
+    //즉 onAuthStateChanged함수는 로그인하거나 로그아웃할때 함수가 발동된다. 또 어플리케이션이 초기화될때 발생한다.
     authService.onAuthStateChanged((user)=>{  //user가 값이 없으면 Auth를 보여주고 값이 있으면 Home을 보여준다. !!!!!
       if(user){
-        setIsLoggedIn(true);
         setUserObj(user); //onAuthStateChanged함수를 이용해, 로그인된 유저의 고유 id 정보를 받아옴
       }else{
-        setIsLoggedIn(false);
+        setUserObj(null);
       }
       setInit(true); //초기화 즉, 값필요한거 다 받았으니 true로 바꾸고, 이제 렌더해도되!!!라는의미의 setInit(true)임 //필요한데이터의 로딩속도보다 훨씬빠른 리엑트의 렌딩속도를 제어하기위해 이런방식 적극추천!!!!!!!!!!
     });
   },[]);
   return (
     <>
-    {init ? <AppRouter isLoggedIn={isLoggedIn} userObj={userObj}/> : "Initializing..."} 
+    {init ? <AppRouter isLoggedIn={Boolean(userObj)} userObj={userObj}/> : "Initializing..."} 
     <footer>&copy; twitter {new Date().getFullYear()}</footer>
     </>
   );

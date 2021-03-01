@@ -24,13 +24,15 @@ const Home = ({userObj}) => {
   */
   useEffect(() => {
     //getNweets();
-    dbService.collection("tweet").orderBy("createAt","asc").onSnapshot( snapshot =>{  //collection "tweet"에 무언가 일이벌어지면(read,delete,update 등..모두다 포함함) 감지(listen하고있다는말)하고 함수가발동됨
+    dbService.collection("tweet").orderBy("createAt","asc").onSnapshot( snapshot =>{ 
+                                                              //onSnapshot은 파이어베이스 디비의 litener라고 생각하면됨 (ex. event litener처럼)
+                                                              //collection "tweet"에 무언가 일이벌어지면(read,delete,update 등..모두다 포함함) 감지(listen하고있다는말)하고 함수가발동됨
                                                               //다른브라우저를 열어 다른유저가 디비에 값을 update해도, 여기서 onSnapshot함수로 해당 디비를 listen하고있기때문에 발동됨,실시간채팅처럼 이용할수도있음
                                                             //snapshot의 .docs를 통해 해당 컬렉션의 document들에 접근할수있음. 1)의방식과 달리 submit한 데이터가 새로고침하기않아도 실시간처럼 바로 보여진다.
                                                             //파이어베이스디비에 값이 저장될때 시간순대로 저장되지않음 그래서, 디비값을불러올때 .orderBy에서 어떤필드값을 기준으로 오름차순,내림차순해서가져올껀지 정할수있음
       //console.log("something happens")
       const nweetArray = snapshot.docs.map((doc)=>({
-        id:doc.id,
+        id:doc.id, //document마다의 고유한 id
         ...doc.data(),
       }));
       console.log(nweetArray);
